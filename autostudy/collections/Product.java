@@ -2,7 +2,7 @@ package autostudy.collections;
 
 import java.math.BigDecimal;
 
-public class Product {
+public class Product implements Comparable<Product>{
     private static int latestId = 0;
     {
         id = ++latestId;
@@ -36,5 +36,9 @@ public class Product {
 
     public BigDecimal getPrice() {
         return price;
+    }
+    @Override
+    public int compareTo(Product o) {
+        return getName().length()-o.getName().length();
     }
 }

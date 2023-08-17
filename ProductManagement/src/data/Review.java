@@ -20,7 +20,7 @@ package data;
  *
  * @author rafael.c.gonzalez
  */
-public class Review {
+public class Review implements Comparable<Review>{
     private Rating rating;
     private String comment;
 
@@ -40,6 +40,11 @@ public class Review {
     @Override
     public String toString() {
         return "Review{ rating=" + rating + ", comment=" + comment + '}';
+    }
+
+    @Override
+    public int compareTo(Review other) {
+        return other.rating.ordinal() - this.rating.ordinal();
     }
     
 }
