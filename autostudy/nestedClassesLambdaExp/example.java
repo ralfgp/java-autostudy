@@ -14,6 +14,25 @@ public class example {
         anonymousInnerClass();
         anonInnerClassesAndFuncInterf();
         lambdaExpressions();
+        lambdaExpParaAndBody();
+    }
+
+
+    private static void lambdaExpParaAndBody() {
+        List <String> list = new ArrayList<>();
+
+        // To apply modifiers like final to parameters, define them using specific types or locally infered types
+        list.removeIf((final String s) -> s.equals("remove me"));
+        list.removeIf((final var s) -> s.equals("remove me"));
+
+        // When no modifier is required you may just infer types from the context
+        // Formal body {} and return statements are optional when using a simple expression
+        list.sort((s1,s2) -> {return s1.compareTo(s2);});
+
+        //Expression can be predefined and reused
+        Comparator<String> sortText = (s1,s2) -> s1.compareTo(s2);
+        Collections.sort(list, sortText);
+
     }
 
     /*
