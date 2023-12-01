@@ -15,6 +15,46 @@ public class example {
         anonInnerClassesAndFuncInterf();
         lambdaExpressions();
         lambdaExpParaAndBody();
+        lambdaMethodReference();
+        defaultAndStaticMethCompInterface();
+    }
+
+
+    private static void defaultAndStaticMethCompInterface() {
+        List<Product> menu = new ArrayList<>();
+        menu.add(new Food("Cake",1.99));
+        menu.add(new Food("Cookie",2.99));
+        menu.add(new Drink("Tea", 2.99));
+        menu.add(new Drink("Coffee", 2.99));
+        Comparator<Product> sortNames = (p1, p2) -> p1.getName().compareTo(p2.getName());
+        Comparator<Product> sortPrices = (p1, p2) -> p1.getPrice().compareTo(p2.getPrice());
+
+        // thenComparing ass additional comparators
+        // reversed reveses sorting order
+        Collections.sort(menu, sortNames.thenComparing(sortPrices).reversed());
+        menu.add(null);
+        // nullsFirst and nullsLast return comparators that enable sorting collections with null values
+        Collections.sort(menu, Comparator.nullsFirst(sortNames));
+    }
+
+
+    private static void lambdaMethodReference() {
+        TextFilter filter =  new TextFilter();
+        List<String> list = new ArrayList<>();
+
+        // Reference by <Class>::<staticMethod> - reference a static method
+        list.removeIf(s -> TextFilter.removeA(s));
+        list.removeIf(TextFilter::removeA);         //same as the line above
+
+        Collections.sort(list, (s1, s2) -> filter.sortText(s1, s2));
+        // Reference by <object>::<instanceMethod> - reference an instance method of a particular object
+        Collections.sort(list, filter::sortText); //same as the line above
+
+        Collections.sort(list, (s1, s2) -> s1.compareToIgnoreCase(s2));
+        // Reference by <Class>::<instanceMethod> - reference an instance method of an arbitrary object of a particular type
+        Collections.sort(list, String::compareToIgnoreCase); //same as the line above
+
+        // The last type of eference is <Class>::new - reference a constructor
     }
 
 
