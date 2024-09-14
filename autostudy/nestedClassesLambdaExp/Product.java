@@ -14,6 +14,10 @@ public class Product implements Comparable<Product>, Comparator<Product>{
 
     public Product(){ this("no name"); }
     public Product(String name){ this(name,0); }
+    public Product(String name, BigDecimal price){
+        this.name = name;
+        this.price = price;
+    }
     public Product(String name, double price) {
         this.name = name;
         this.price = BigDecimal.valueOf(price);

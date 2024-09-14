@@ -1,5 +1,6 @@
 package autostudy.nestedClassesLambdaExp;
 
+import java.math.BigDecimal;
 import java.time.LocalDate;
 
 public class Drink extends Product{
@@ -11,6 +12,10 @@ public class Drink extends Product{
     public Drink(String name, double price, LocalDate bestBefore) {
         super(name, price);
         this.bestBefore = bestBefore;
+    }
+    public Drink(String name, BigDecimal price) {
+        super(name, price);
+        this.bestBefore = LocalDate.now().plusDays(3);
     }
     
     public LocalDate getBestBefore() {

@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+import java.util.function.Predicate;
 
 public class example {
     public static void main(String[] args) {
@@ -17,6 +18,31 @@ public class example {
         lambdaExpParaAndBody();
         lambdaMethodReference();
         defaultAndStaticMethCompInterface();
+        useOfPredicates();
+    }
+
+
+    // Use Default and Static Methods of the Predicate Interface
+    private static void useOfPredicates() {
+        List<Product> menu = new ArrayList<>();
+        menu.add(new Food("Cake", BigDecimal.valueOf(1.99)));
+        menu.add(new Food("Cookie", BigDecimal.valueOf(2.99)));
+        menu.add(new Drink("Tea", BigDecimal.valueOf(1.99)));
+        menu.add(new Drink("Coffee", BigDecimal.valueOf(1.99)));
+        
+        Predicate<Product> foodFilter = (p) -> p instanceof Food;
+        Predicate<Product> priceFilter = (p) -> p.getPrice().compareTo(BigDecimal.valueOf(2)) < 0;
+
+        // Default methods provided by the java.util.function.Predicate interface:
+        // • and combines predicates like the && operator
+        // • or combines predicates like the || operator
+        // • negate returns a predicate that represents the logical negation of this predicate
+        menu.removeIf(foodFilter.negate().or(priceFilter));
+
+        // Static methods provided by the Predicate interface:
+        // • not returns a predicate that is the negation of the supplied predicate
+        // • isEqual returns a predicate that compares the supplied object with the contents of the collection
+        menu.removeIf(Predicate.isEqual(new Food("Cake", BigDecimal.valueOf(1.99))));
     }
 
 
@@ -29,16 +55,42 @@ public class example {
         Comparator<Product> sortNames = (p1, p2) -> p1.getName().compareTo(p2.getName());
         Comparator<Product> sortPrices = (p1, p2) -> p1.getPrice().compareTo(p2.getPrice());
 
-        // thenComparing ass additional comparators
+        // thenComparing adds additional comparators
         // reversed reveses sorting order
         Collections.sort(menu, sortNames.thenComparing(sortPrices).reversed());
         menu.add(null);
-        // nullsFirst and nullsLast return comparators that enable sorting collections with null values
+        // nullsFirst() and nullsLast() return comparators that enable sorting collections with null values
         Collections.sort(menu, Comparator.nullsFirst(sortNames));
     }
 
+    /*
+    * Default and Static Methods in Functional Interfaces
+    * Interfaces may provide additional non-abstract methods.
+    * - Lambda expression implements the only abstract method provided by the functional interface.
+    * - default and static methods may be defined by the interface to provide additional features.
+    * - private methods could be present, but they are not visible outside of the interface.
+    * - There is no requirement to override default methods unless there is a conflict between different
+    *   interfaces that a given class implements.
+    * - Lambda expressions cannot cause such conflicts, because each one is an inline implementation of exactly one interface.
+    */
+    public interface SomeInterface {
+        public static final int SOME_VALUE = 123;  // Constant value
+        void someAbstractMethod();
+        // Default method
+        public default void someDefaultMethod() {   // Implementation of default method
+        }
+        // Private method (not accessible outside the interface)
+        private void somePrivateMethod() {      // Implementation of private method
+        }
+        // Static method
+        public static void someStaticMethod() { // Implementation of static method
+        }
+    }
 
+    // Lambda expressions may use method referencing.
+    // Reference method is semantically identical to the method that lambda expression is implementing.
     private static void lambdaMethodReference() {
+        // Given a class TextFilter with the methods removeA and sortText
         TextFilter filter =  new TextFilter();
         List<String> list = new ArrayList<>();
 
@@ -62,14 +114,14 @@ public class example {
         List <String> list = new ArrayList<>();
 
         // To apply modifiers like final to parameters, define them using specific types or locally infered types
-        list.removeIf((final String s) -> s.equals("remove me"));
-        list.removeIf((final var s) -> s.equals("remove me"));
+        list.removeIf((final String s) -> s.equals("remove me"));   // Specific parameter type
+        list.removeIf((final var s) -> s.equals("remove me"));      // Locally parameter inferred type
 
         // When no modifier is required you may just infer types from the context
         // Formal body {} and return statements are optional when using a simple expression
-        list.sort((s1,s2) -> {return s1.compareTo(s2);});
+        list.sort((s1,s2) -> {return s1.compareTo(s2);}); // infer parameter type from context
 
-        //Expression can be predefined and reused
+        //Expression can be predefined and reused, ex. sortText
         Comparator<String> sortText = (s1,s2) -> s1.compareTo(s2);
         Collections.sort(list, sortText);
 
